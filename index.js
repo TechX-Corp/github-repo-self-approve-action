@@ -1,13 +1,13 @@
-import { getInput, setFailed } from '@actions/core'
-import { context } from '@actions/github'
-import { GitHub } from '@actions/github/lib/utils'
-import { createAppAuth } from '@octokit/auth-app'
+const core = require('@actions/core')
+const github = require('@actions/github')
+const { GitHub } = require('@actions/github/lib/utils')
+const { createAppAuth } = require('@octokit/auth-app')
 const eventPayload = require(process.env.GITHUB_EVENT_PATH)
-const { owner, repo } = context.repo
+const { owner, repo } = github.context.repo
 
-const appId = getInput('appid', { required: true })
-const privateKey = getInput('privatekey', { required: true })
-const installationId = getInput('installationid', { required: true })
+const appId = core.getInput('appid', { required: true })
+const privateKey = core.getInput('privatekey', { required: true })
+const installationId = core.getInput('installationid', { required: true })
 
 const installationOctokit = new GitHub({
   authStrategy: createAppAuth,
@@ -27,6 +27,6 @@ const installationOctokit = new GitHub({
       event: 'APPROVE'
     })
   } catch (error) {
-    setFailed(error.message)
+    core.setFailed(error.message)
   }
 })()
